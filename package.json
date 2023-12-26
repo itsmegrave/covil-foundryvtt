@@ -1,0 +1,61 @@
+{
+  "private": true,
+  "name": "covil-velho-dragao",
+  "description": "<description of the package>",
+  "license": "<please choose an appropriate license. https://choosealicense.com/ is a great place to get more information if you are unsure>",
+  "homepage": "<optionally the URL to your repository or another homepage>",
+  "repository": {
+    "type": "git",
+    "url": "<optionally the URL to your repository>"
+  },
+  "bugs": {
+    "url": "<optionally the URL to your issues list>"
+  },
+  "contributors": [
+    {
+      "name": "<your name>",
+      "email": "<optionally your e-mail address>"
+    }
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "gulp build",
+    "build:watch": "gulp watch",
+    "link-project": "gulp link",
+    "clean": "gulp clean",
+    "clean:link": "gulp link --clean",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.js,.cjs,.mjs .",
+    "lint:fix": "eslint --ext .ts,.js,.cjs,.mjs --fix .",
+    "format": "prettier --write \"./**/*.(ts|js|cjs|mjs|json|yml|scss)\"",
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@rollup/stream": "^3.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "fs-extra": "^11.2.0",
+    "gulp": "^4.0.2",
+    "gulp-dart-sass": "^1.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "rollup": "^2.79.1",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "yargs": "^17.7.2"
+  },
+  "lint-staged": {
+    "*.(ts|js|cjs|mjs)": "eslint --fix",
+    "*.(json|yml|scss)": "prettier --write"
+  }
+}
