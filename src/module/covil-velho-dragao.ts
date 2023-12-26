@@ -17,10 +17,15 @@
 // Import TypeScript modules
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
+import { Covil } from './config';
+import { isClientGM, localize } from './utils/game';
+
+// @ts-expect-error need to refactor this class
+import { CovilLayer } from './covil-layer';
 
 // Initialize module
 Hooks.once('init', async () => {
-  console.log('covil-velho-dragao | Initializing covil-velho-dragao');
+  console.log(`${Covil.logPrefix} Initializing covil-velho-dragao`);
 
   // Assign custom classes and constants here
 
@@ -31,6 +36,9 @@ Hooks.once('init', async () => {
   await preloadTemplates();
 
   // Register custom sheets (if any)
+
+  const layers = { covil: { layerClass: CovilLayer, group: 'interface' } };
+  CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
 });
 
 // Setup module
@@ -42,6 +50,30 @@ Hooks.once('setup', async () => {
 // When ready
 Hooks.once('ready', async () => {
   // Do anything once the module is ready
+});
+
+Hooks.on('getSceneControlButtons', (buttons: SceneControl[]) => {
+  const covilTools = {
+    activeTool: 'select',
+    icon: 'cvd-main-icon',
+    layer: 'covil',
+    name: 'covil',
+    title: localize('covil-velho-dragao.title'),
+    visible: isClientGM(),
+    tools: [
+      {
+        name: 'forge',
+        icon: 'fas fa-fire',
+        title: localize('covil-velho-dragao.forge'),
+        button: true,
+        onClick: () => {
+          console.log('Forge');
+        },
+      },
+    ],
+  };
+
+  buttons.push(covilTools);
 });
 
 // Add any additional hooks if necessary

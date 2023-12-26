@@ -1,23 +1,26 @@
 {
   "id": "covil-velho-dragao",
-  "title": "<human readable title for covil-velho-dragao>",
+  "title": "Covil do Velho Dragão",
   "description": "<description of the package>",
   "authors": [
     {
-      "name": "<your name>",
-      "email": "<optionally your e-mail address>",
-      "discord": "<optionally your discord username>"
+      "name": "itsmegrave",
+      "discord": "Sammael"
+    },
+    {
+      "name": "thekarlz",
+      "discord": "thekarlz"
     }
   ],
   "url": "This is auto replaced",
-  "license": "<please choose an appropriate license. https://choosealicense.com/ is a great place to get more information if you are unsure>",
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/deed.pt-br",
   "readme": "<optionally the URL to your readme>",
-  "bugs": "<optionally the URL to your issue list>",
+  "bugs": "https://github.com/itsmegrave/covil-foundryvtt/issues",
   "changelog": "<optionally the URL to your changelog>",
   "version": "This is auto replaced",
   "compatibility": {
-    "minimum": "10",
-    "verified": "10"
+    "minimum": "11",
+    "verified": "11"
   },
   "scripts": [],
   "esmodules": ["module/covil-velho-dragao.js"],
@@ -28,10 +31,25 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português Brasileiro",
+      "path": "lang/pt-BR.json"
     }
   ],
   "relationships": {
-    "systems": [],
+    "systems": [
+      {
+        "id": "olddragon2e",
+        "type": "system",
+        "manifest": "https://github.com/burobrasil/olddragon2e-foundryvtt/releases/latest/download/system.json",
+        "compatibility": {
+          "minimum": "0.0.19",
+          "verified": "0.0.19"
+        }
+      }
+    ],
     "requires": [],
     "conflicts": []
   },
