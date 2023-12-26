@@ -2,19 +2,18 @@
   "private": true,
   "name": "covil-velho-dragao",
   "description": "<description of the package>",
-  "license": "<please choose an appropriate license. https://choosealicense.com/ is a great place to get more information if you are unsure>",
-  "homepage": "<optionally the URL to your repository or another homepage>",
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/deed.pt-br",
+  "homepage": "https://covil.karlz.com.br",
   "repository": {
     "type": "git",
-    "url": "<optionally the URL to your repository>"
+    "url": "https://github.com/itsmegrave/covil-foundryvtt"
   },
   "bugs": {
-    "url": "<optionally the URL to your issues list>"
+    "url": "https://github.com/itsmegrave/covil-foundryvtt/issues"
   },
   "contributors": [
     {
-      "name": "<your name>",
-      "email": "<optionally your e-mail address>"
+      "name": "itsmegrave"
     }
   ],
   "type": "module",
