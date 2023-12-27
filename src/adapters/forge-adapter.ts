@@ -1,4 +1,4 @@
-import { ForgedWeapon } from '../types/covil/forged-weapon';
+import { ForgedWeapon, InteligenciaArma } from '../types/covil/forged-weapon';
 import { Weapon } from '../types/olddragon2/weapon';
 
 export class ForgeAdapter {
@@ -8,7 +8,7 @@ export class ForgeAdapter {
       img: forgedWeapon.qeImg,
       type: 'weapon',
       system: {
-        description: this._parseDescription(forgedWeapon.propriedades, forgedWeapon.sufixo),
+        description: this._parseDescription(forgedWeapon.propriedades, forgedWeapon.sufixo, forgedWeapon.inteligencia),
         cost: forgedWeapon.custo,
         damage_type: forgedWeapon.fkDano,
         weight_in_load: Number(forgedWeapon.qePeso),
@@ -32,11 +32,11 @@ export class ForgeAdapter {
     };
   }
 
-  _isMagicItem(ba: number = 0, ca: number = 0, damage: number = 0) {
+  private _isMagicItem(ba: number = 0, ca: number = 0, damage: number = 0) {
     return Boolean(ba > 0 || ca > 0 || damage > 0);
   }
 
-  _parseWeaponType(forgedWeapon: ForgedWeapon): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
+  private _parseWeaponType(forgedWeapon: ForgedWeapon): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
     if (forgedWeapon.arrow || forgedWeapon.bolt || forgedWeapon.bolt_small) {
       return 'ammunition';
     }
@@ -52,17 +52,46 @@ export class ForgeAdapter {
     return 'melee';
   }
 
-  _parseDescription(properties: string, suffix: Map<string, string>) {
+  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: InteligenciaArma) {
     const description = [properties, Object.keys(suffix).join(', ')];
 
-    return `${description.join(', ')} \n\n ${this._parseSuffix(suffix)}`;
+    return `${description.join(', ')}\n\n${this._parseMap(suffix)}${this._parseIntelligentWeapon(intelligent)}`;
   }
 
-  _parseSuffix(suffix: Map<string, string>) {
-    if (!suffix) return null;
+  private _isIntelligentWeapon(intelligent: InteligenciaArma): boolean {
+    return !!intelligent;
+  }
+
+  private _parseIntelligentWeapon(intelligent: InteligenciaArma) {
+    if (!this._isIntelligentWeapon(intelligent)) return '';
+
+    const intelligentWeaponBlock = ['\n'];
+    intelligentWeaponBlock.push('=====================================\n');
+    intelligentWeaponBlock.push('Propriedades Arma Inteligente:');
+    intelligentWeaponBlock.push(`* INT: ${intelligent.INT}`);
+    intelligentWeaponBlock.push(`* Comunicação: ${intelligent.Comunic}`);
+    intelligentWeaponBlock.push(`* Idiomas: ${intelligent.Idiomas || 0}`);
+    intelligentWeaponBlock.push(`* Poderes de Detecção: \n${this._parseIntelligentPowers(intelligent.PodDetec)}`);
+    if (intelligent.PodMai) {
+      intelligentWeaponBlock.push(`* Poderes Maiores: \n${this._parseIntelligentPowers(intelligent.PodMai)}`);
+    }
+
+    return intelligentWeaponBlock.join('\n');
+  }
+
+  private _parseIntelligentPowers(powers?: Map<string, string>) {
+    if (!powers) return '';
+
+    return Object.entries(powers)
+      .map(([key, value]) => `  ** ${key}: ${value}`)
+      .join('\n');
+  }
+
+  private _parseMap(suffix: Map<string, string>) {
+    if (!suffix) return '';
 
     return Object.entries(suffix)
       .map(([key, value]) => `${key}: ${value}`)
-      .join('\n');
+      .join('\n\n');
   }
 }

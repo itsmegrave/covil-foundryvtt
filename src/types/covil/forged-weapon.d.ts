@@ -31,4 +31,13 @@ export type ForgedWeapon = {
   polearm?: boolean;
   two_handed?: boolean;
   versatile?: boolean;
+  inteligencia: InteligenciaArma;
+};
+
+export type InteligenciaArma = {
+  INT: number;
+  Comunic: string;
+  Idiomas: number;
+  PodDetec?: Map<string, string>;
+  PodMai?: Map<string, string>;
 };
