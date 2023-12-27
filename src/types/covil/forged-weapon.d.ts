@@ -1,0 +1,26 @@
+export type ForgedWeapon = {
+  id_equipamento: number;
+  fkTipoEquipamento?: string;
+  qeNome?: string;
+  qePeso?: string;
+  qeCustoPo?: string;
+  qeCustoPp?: string;
+  qeCustoPc?: string;
+  qeDano?: string;
+  fkConceito?: string;
+  fkDano?: 'piercing' | 'slashing' | 'bludgeoning';
+  bnDano?: number;
+  bnCa?: number;
+  bnBa?: number;
+  bnCarga?: number;
+  qeAlcDips?: string;
+  qeAlcArr?: string;
+  qeProp?: string;
+  qeObs?: string;
+  qeStatus?: string;
+  qeAutor?: string;
+  fkFonte?: string;
+  qeImg?: string;
+  sufixo?: string[];
+  propriedades?: string;
+};
