@@ -18,11 +18,10 @@
 import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { Covil } from './config';
-import { isClientGM, localize } from './utils/game';
 
 // @ts-expect-error need to refactor this class
 import { CovilLayer } from './covil-layer';
-import { showForgeDialog } from '../dialog/forge-dialog';
+import { registerHooks } from './hooks';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -38,6 +37,8 @@ Hooks.once('init', async () => {
 
   // Register custom sheets (if any)
 
+  registerHooks();
+
   const layers = { covil: { layerClass: CovilLayer, group: 'interface' } };
   CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
 });
@@ -51,30 +52,6 @@ Hooks.once('setup', async () => {
 // When ready
 Hooks.once('ready', async () => {
   // Do anything once the module is ready
-});
-
-Hooks.on('getSceneControlButtons', (buttons: SceneControl[]) => {
-  const covilTools = {
-    activeTool: 'select',
-    icon: 'cvd-main-icon',
-    layer: 'covil',
-    name: 'covil',
-    title: localize('covil-velho-dragao.title'),
-    visible: isClientGM(),
-    tools: [
-      {
-        name: 'forge',
-        icon: 'fas fa-fire',
-        title: localize('covil-velho-dragao.forge'),
-        button: true,
-        onClick: () => {
-          showForgeDialog();
-        },
-      },
-    ],
-  };
-
-  buttons.push(covilTools);
 });
 
 // Add any additional hooks if necessary

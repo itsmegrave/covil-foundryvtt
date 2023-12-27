@@ -1,4 +1,5 @@
 export type ForgedWeapon = {
+  custo: string | undefined;
   id_equipamento: number;
   fkTipoEquipamento?: string;
   qeNome?: string;
@@ -21,6 +22,13 @@ export type ForgedWeapon = {
   qeAutor?: string;
   fkFonte?: string;
   qeImg?: string;
-  sufixo?: string[];
-  propriedades?: string;
+  sufixo: Map<string, string>;
+  propriedades: string;
+  qtde?: number;
+  bolt?: boolean;
+  bolt_small?: boolean;
+  arrow?: boolean;
+  polearm?: boolean;
+  two_handed?: boolean;
+  versatile?: boolean;
 };
