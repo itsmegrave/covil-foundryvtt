@@ -22,6 +22,7 @@ import { isClientGM, localize } from './utils/game';
 
 // @ts-expect-error need to refactor this class
 import { CovilLayer } from './covil-layer';
+import { showForgeDialog } from '../dialog/forge-dialog';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -67,7 +68,7 @@ Hooks.on('getSceneControlButtons', (buttons: SceneControl[]) => {
         title: localize('covil-velho-dragao.forge'),
         button: true,
         onClick: () => {
-          console.log('Forge');
+          showForgeDialog();
         },
       },
     ],
