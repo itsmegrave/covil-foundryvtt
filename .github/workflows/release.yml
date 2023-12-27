@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2022 Johannes Loher
-#
-# SPDX-License-Identifier: MIT
-
 name: Release
 
 on:
@@ -10,7 +6,10 @@ on:
 
 env:
   package_type: module
-  node_version: 16
+  node_version: 20
+  fvtt_minimum: 11
+  fvtt_verified: 11
+  fvtt_dry_run: false
 
 jobs:
   lint:
@@ -67,6 +66,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.get_id.outputs.id }}
+      version-without-v: ${{ steps.get_version.outputs.version-without-v }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -92,6 +94,13 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
+      - name: Extract FoundryVTT id
+        id: get_id
+        run: |
+          value=$(jq -r '.id' src/${{ env.package_type }}.json)
+          echo "id is $value"
+          echo "id=$value" >> "$GITHUB_OUTPUT"
+
       - name: Substitute Manifest and Download Links For Versioned Ones
         id: sub_manifest_link_version
         uses: microsoft/variable-substitution@v1
@@ -100,14 +109,14 @@ jobs:
         env:
           version: ${{ steps.get_version.outputs.version-without-v }}
           url: https://github.com/${{ github.repository }}
-          manifest: https://github.com/${{ github.repository }}/releases/latest/download/${{ env.package_type }}.json
-          download: https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/${{ env.package_type }}.zip
+          manifest: https://github.com/${{ github.repository }}/releases/latest/download/${{ steps.get_id.outputs.id }}.json
+          download: https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/${{ steps.get_id.outputs.id }}.zip
 
       - name: Build
         run: npm run build
 
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
@@ -118,19 +127,24 @@ jobs:
       - typecheck
       - build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Download production artifacts for publication
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
 
       - name: Create zip file
         working-directory: ./dist
-        run: zip -r ../${{ env.package_type }}.zip .
+        run: zip -r ../${{ needs.build.outputs.id }}.zip .
+
+      - name: Copy manifest for vanity artifact name
+        run: cp ./dist/${{ env.package_type }}.json ./dist/${{ needs.build.outputs.id }}.json
 
       - name: Create release
         id: create_version_release
@@ -139,5 +153,24 @@ jobs:
           allowUpdates: true
           name: ${{ github.event.release.name }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: './dist/${{ env.package_type }}.json, ./${{ env.package_type }}.zip'
+          artifacts: './dist/${{ needs.build.outputs.id }}.json, ./${{ needs.build.outputs.id }}.zip'
           body: ${{ github.event.release.body }}
+
+      - name: Submit package to FoundryVTT Package Release API
+        run: |
+          curl -X POST "https://api.foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${{ secrets.FOUNDRYVTT_RELEASE_TOKEN }}" \
+            -d '{
+              "id": "${{ needs.build.outputs.id }}",
+              "dry-run": ${{ env.fvtt_dry_run }},
+              "release": {
+                "version": "${{ needs.build.outputs.version-without-v }}",
+                "manifest": "https://github.com/${{ github.repository }}/releases/download/${{ needs.build.outputs.version-without-v }}/${{ needs.build.outputs.id }}.json",
+                "notes": "https://github.com/${{ github.repository }}/releases/tag/${{ needs.build.outputs.version-without-v }}",
+                "compatibility": {
+                  "minimum": "${{ env.fvtt_minimum }}",
+                  "verified": "${{ env.fvtt_verified }}"
+                }
+              }
+            }'
