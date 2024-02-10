@@ -5,14 +5,15 @@ const itemTypes = {
   weapon: 'Arma',
   misc: 'Itens Gerais',
   shield: 'Escudo',
+  potion: 'Poções',
 };
 export class ForgeAdapter {
   transformToOldDragon2Item(forgedItem: ForgedItem): OldDragon2Item {
     switch (forgedItem.tipoItem) {
       case itemTypes.weapon:
         return this.transformToOldDragon2Weapon(forgedItem);
-
       case itemTypes.misc:
+      case itemTypes.potion:
         return this.transformToOldDragon2MiscItem(forgedItem);
       case itemTypes.shield:
         return this.transformToOldDragon2Shield(forgedItem);
