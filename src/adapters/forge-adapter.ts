@@ -1,8 +1,23 @@
-import { ForgedWeapon, InteligenciaArma } from '../types/covil/forged-weapon';
-import { Weapon } from '../types/olddragon2/weapon';
+import { ForgedItem, WeaponIntelligence } from '../types/covil/forged-item';
+import { OldDragon2Weapon } from '../types/olddragon2';
 
+const itemTypes = {
+  weapon: 'Arma',
+};
 export class ForgeAdapter {
-  transformToOldDragon2Weapon(forgedWeapon: ForgedWeapon): Weapon {
+  transformToOldDragon2Item(forgedItem: ForgedItem): OldDragon2Weapon {
+    switch (forgedItem.tipoItem) {
+      case itemTypes.weapon:
+        return this.transformToOldDragon2Weapon(forgedItem);
+
+      default:
+        console.debug(forgedItem.tipoItem);
+        throw new Error('Tipo de Item desconhecido!');
+        break;
+    }
+  }
+
+  transformToOldDragon2Weapon(forgedWeapon: ForgedItem): OldDragon2Weapon {
     return {
       name: `${forgedWeapon.qeNome} - ${Object.keys(forgedWeapon.sufixo).join(', ')}`,
       img: forgedWeapon.qeImg,
@@ -36,7 +51,7 @@ export class ForgeAdapter {
     return Boolean(ba > 0 || ca > 0 || damage > 0);
   }
 
-  private _parseWeaponType(forgedWeapon: ForgedWeapon): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
+  private _parseWeaponType(forgedWeapon: ForgedItem): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
     if (forgedWeapon.arrow || forgedWeapon.bolt || forgedWeapon.bolt_small) {
       return 'ammunition';
     }
@@ -52,17 +67,17 @@ export class ForgeAdapter {
     return 'melee';
   }
 
-  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: InteligenciaArma) {
+  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: WeaponIntelligence) {
     const description = [properties, Object.keys(suffix).join(', ')];
 
     return `${description.join(', ')}\n\n${this._parseMap(suffix)}${this._parseIntelligentWeapon(intelligent)}`;
   }
 
-  private _isIntelligentWeapon(intelligent: InteligenciaArma): boolean {
+  private _isIntelligentWeapon(intelligent: WeaponIntelligence): boolean {
     return !!intelligent;
   }
 
-  private _parseIntelligentWeapon(intelligent: InteligenciaArma) {
+  private _parseIntelligentWeapon(intelligent: WeaponIntelligence) {
     if (!this._isIntelligentWeapon(intelligent)) return '';
 
     const intelligentWeaponBlock = ['\n'];
