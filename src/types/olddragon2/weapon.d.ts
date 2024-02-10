@@ -14,5 +14,6 @@ export interface OldDragon2Weapon extends Omit<OldDragon2Item, 'type'> {
     polearm?: boolean;
     two_handed?: boolean;
     versatile?: boolean;
+    type: 'melee' | 'ranged' | 'ammunition' | 'throwing';
   };
 }

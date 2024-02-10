@@ -2,7 +2,7 @@ export type ForgedItem = {
   custo?: string;
   id_equipamento: number;
   fkTipoEquipamento?: string;
-  qeNome?: string;
+  qeNome: string;
   qePeso?: string;
   qeCustoPo?: string;
   qeCustoPp?: string;
