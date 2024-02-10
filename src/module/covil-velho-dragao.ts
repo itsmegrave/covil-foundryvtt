@@ -19,8 +19,6 @@ import { registerSettings } from './settings';
 import { preloadTemplates } from './preloadTemplates';
 import { Covil } from './config';
 
-// @ts-expect-error need to refactor this class
-import { CovilLayer } from './covil-layer';
 import { registerHooks } from './hooks';
 
 // Initialize module
@@ -38,9 +36,6 @@ Hooks.once('init', async () => {
   // Register custom sheets (if any)
 
   registerHooks();
-
-  const layers = { covil: { layerClass: CovilLayer, group: 'interface' } };
-  CONFIG.Canvas.layers = foundry.utils.mergeObject(Canvas.layers, layers);
 });
 
 // Setup module

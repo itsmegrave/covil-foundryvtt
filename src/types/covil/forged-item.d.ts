@@ -1,8 +1,8 @@
-export type ForgedWeapon = {
-  custo: string | undefined;
+export type ForgedItem = {
+  custo?: string;
   id_equipamento: number;
   fkTipoEquipamento?: string;
-  qeNome?: string;
+  qeNome: string;
   qePeso?: string;
   qeCustoPo?: string;
   qeCustoPp?: string;
@@ -31,10 +31,11 @@ export type ForgedWeapon = {
   polearm?: boolean;
   two_handed?: boolean;
   versatile?: boolean;
-  inteligencia: InteligenciaArma;
+  inteligencia: WeaponIntelligence;
+  tipoItem: string;
 };
 
-export type InteligenciaArma = {
+export type WeaponIntelligence = {
   INT: number;
   Comunic: string;
   Idiomas: number;

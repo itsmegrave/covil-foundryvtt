@@ -1,8 +1,8 @@
 import { ForgeAdapter } from '../adapters/forge-adapter';
 import { Covil } from '../module/config';
 import { CovilService } from '../services/covil-service';
-import { ForgedWeapon } from '../types/covil/forged-weapon';
-import { Weapon } from '../types/olddragon2/weapon';
+import { ForgedItem } from '../types/covil/forged-item';
+import { OldDragon2Item } from '../types/olddragon2';
 
 export class ForgeItem {
   service: CovilService;
@@ -20,8 +20,8 @@ export class ForgeItem {
     this.createItem(response);
   }
 
-  async createItem(json: ForgedWeapon) {
-    const itemData: Weapon = this.adapter.transformToOldDragon2Weapon(json);
+  async createItem(json: ForgedItem) {
+    const itemData: OldDragon2Item = this.adapter.transformToOldDragon2Item(json);
 
     const item = await Item.create(itemData);
     console.debug(Covil.logPrefix, item);

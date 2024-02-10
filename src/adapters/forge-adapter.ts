@@ -1,26 +1,66 @@
-import { ForgedWeapon, InteligenciaArma } from '../types/covil/forged-weapon';
-import { Weapon } from '../types/olddragon2/weapon';
+import { ForgedItem, WeaponIntelligence } from '../types/covil/forged-item';
+import { OldDragon2Weapon, OldDragon2Item, OldDragon2Shield } from '../types/olddragon2';
 
+const itemTypes = {
+  weapon: 'Arma',
+  misc: 'Itens Gerais',
+  shield: 'Escudo',
+  potion: 'Poções',
+};
 export class ForgeAdapter {
-  transformToOldDragon2Weapon(forgedWeapon: ForgedWeapon): Weapon {
+  transformToOldDragon2Item(forgedItem: ForgedItem): OldDragon2Item {
+    switch (forgedItem.tipoItem) {
+      case itemTypes.weapon:
+        return this.transformToOldDragon2Weapon(forgedItem);
+      case itemTypes.misc:
+      case itemTypes.potion:
+        return this.transformToOldDragon2MiscItem(forgedItem);
+      case itemTypes.shield:
+        return this.transformToOldDragon2Shield(forgedItem);
+      default:
+        console.debug(forgedItem.tipoItem);
+        throw new Error('Tipo de Item desconhecido!');
+        break;
+    }
+  }
+
+  transformToOldDragon2Shield(forgedShield: ForgedItem): OldDragon2Shield {
     return {
-      name: `${forgedWeapon.qeNome} - ${Object.keys(forgedWeapon.sufixo).join(', ')}`,
+      name: this._generateName(forgedShield.qeNome, forgedShield.sufixo),
+      type: 'shield',
+      img: forgedShield.qeImg,
+      system: {
+        ...this._generateSystemInformation(forgedShield),
+        bonus_ca: forgedShield.bnCa || 0,
+        type: 'shield',
+      },
+    };
+  }
+  transformToOldDragon2MiscItem(forgedItem: ForgedItem): OldDragon2Item {
+    console.log(forgedItem);
+    return {
+      name: this._generateName(forgedItem.qeNome, forgedItem.sufixo),
+      type: 'misc',
+      system: {
+        ...this._generateSystemInformation(forgedItem),
+      },
+    };
+  }
+
+  transformToOldDragon2Weapon(forgedWeapon: ForgedItem): OldDragon2Weapon {
+    return {
+      name: this._generateName(forgedWeapon.qeNome, forgedWeapon.sufixo),
       img: forgedWeapon.qeImg,
       type: 'weapon',
       system: {
-        description: this._parseDescription(forgedWeapon.propriedades, forgedWeapon.sufixo, forgedWeapon.inteligencia),
-        cost: forgedWeapon.custo,
+        ...this._generateSystemInformation(forgedWeapon),
         damage_type: forgedWeapon.fkDano,
-        weight_in_load: Number(forgedWeapon.qePeso),
-        weight_in_grams: Number(forgedWeapon.qePeso) * 1000,
-        magic_item: this._isMagicItem(forgedWeapon.bnBa, forgedWeapon.bnCa, forgedWeapon.bnDano),
         bonus_ca: forgedWeapon.bnCa,
         damage: forgedWeapon.qeDano,
         bonus_damage: forgedWeapon.bnDano,
         bonus_ba: forgedWeapon.bnBa,
         shoot_range: Number(forgedWeapon.qeAlcDips),
         throw_range: Number(forgedWeapon.qeAlcArr),
-        quantity: forgedWeapon.qtde,
         bolt: forgedWeapon.bolt,
         bolt_small: forgedWeapon.bolt_small,
         arrow: forgedWeapon.arrow,
@@ -32,11 +72,22 @@ export class ForgeAdapter {
     };
   }
 
-  private _isMagicItem(ba: number = 0, ca: number = 0, damage: number = 0) {
-    return Boolean(ba > 0 || ca > 0 || damage > 0);
+  private _generateSystemInformation(forgedItem: ForgedItem) {
+    return {
+      description: this._parseDescription(forgedItem.propriedades, forgedItem.sufixo, forgedItem.inteligencia),
+      cost: forgedItem.custo,
+      weight_in_load: Number(forgedItem.qePeso),
+      weight_in_grams: Number(forgedItem.qePeso) * 1000,
+      magic_item: true,
+      quantity: forgedItem.qtde,
+    };
   }
 
-  private _parseWeaponType(forgedWeapon: ForgedWeapon): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
+  private _generateName(name: string, suffix: Map<string, string>) {
+    return `${name} - ${Object.keys(suffix).join(', ')}`;
+  }
+
+  private _parseWeaponType(forgedWeapon: ForgedItem): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
     if (forgedWeapon.arrow || forgedWeapon.bolt || forgedWeapon.bolt_small) {
       return 'ammunition';
     }
@@ -52,17 +103,17 @@ export class ForgeAdapter {
     return 'melee';
   }
 
-  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: InteligenciaArma) {
+  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: WeaponIntelligence) {
     const description = [properties, Object.keys(suffix).join(', ')];
 
     return `${description.join(', ')}\n\n${this._parseMap(suffix)}${this._parseIntelligentWeapon(intelligent)}`;
   }
 
-  private _isIntelligentWeapon(intelligent: InteligenciaArma): boolean {
+  private _isIntelligentWeapon(intelligent: WeaponIntelligence): boolean {
     return !!intelligent;
   }
 
-  private _parseIntelligentWeapon(intelligent: InteligenciaArma) {
+  private _parseIntelligentWeapon(intelligent: WeaponIntelligence) {
     if (!this._isIntelligentWeapon(intelligent)) return '';
 
     const intelligentWeaponBlock = ['\n'];

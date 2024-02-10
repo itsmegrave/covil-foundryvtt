@@ -1,18 +1,8 @@
-export type Weapon = {
+export interface OldDragon2Weapon extends Omit<OldDragon2Item, 'type'> {
   name: string;
   type: 'weapon';
-  _id?: string;
-  img?: string;
-  system?: {
-    odo_id?: string;
-    description?: string;
-    quantity?: number;
-    cost?: string;
-    weight_in_load?: number;
-    weight_in_grams?: number;
-    magic_item?: boolean;
+  system?: OldDragon2Item['system'] & {
     bonus_ca?: number;
-    type?: string;
     damage_type?: string;
     damage?: string;
     bonus_damage?: number;
@@ -25,7 +15,6 @@ export type Weapon = {
     polearm?: boolean;
     two_handed?: boolean;
     versatile?: boolean;
+    type: 'melee' | 'ranged' | 'ammunition' | 'throwing';
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  effects?: any[];
-};
+}
