@@ -1,3 +1,5 @@
+import { OldDragon2Item } from './item';
+
 export interface OldDragon2Weapon extends OldDragon2Item {
   name: string;
   type: string;
