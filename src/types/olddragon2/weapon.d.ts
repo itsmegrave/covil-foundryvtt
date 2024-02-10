@@ -1,4 +1,5 @@
 export interface OldDragon2Weapon extends Omit<OldDragon2Item, 'type'> {
+  name: string;
   type: 'weapon';
   system?: OldDragon2Item['system'] & {
     bonus_ca?: number;
