@@ -3,7 +3,7 @@ import { OldDragon2Weapon, OldDragon2Item, OldDragon2Shield } from '../types/old
 
 const itemTypes = {
   weapon: 'Arma',
-  general: 'Items Gerais',
+  misc: 'Itens Gerais',
   shield: 'Escudo',
 };
 export class ForgeAdapter {
@@ -12,8 +12,8 @@ export class ForgeAdapter {
       case itemTypes.weapon:
         return this.transformToOldDragon2Weapon(forgedItem);
 
-      case itemTypes.general:
-        return this.transformToOldDragon2GeneralItem(forgedItem);
+      case itemTypes.misc:
+        return this.transformToOldDragon2MiscItem(forgedItem);
       case itemTypes.shield:
         return this.transformToOldDragon2Shield(forgedItem);
       default:
@@ -35,9 +35,15 @@ export class ForgeAdapter {
       },
     };
   }
-  transformToOldDragon2GeneralItem(forgedItem: ForgedItem): OldDragon2Item {
+  transformToOldDragon2MiscItem(forgedItem: ForgedItem): OldDragon2Item {
     console.log(forgedItem);
-    return null;
+    return {
+      name: this._generateName(forgedItem.qeNome, forgedItem.sufixo),
+      type: 'misc',
+      system: {
+        ...this._generateSystemInformation(forgedItem),
+      },
+    };
   }
 
   transformToOldDragon2Weapon(forgedWeapon: ForgedItem): OldDragon2Weapon {
@@ -71,16 +77,13 @@ export class ForgeAdapter {
       cost: forgedItem.custo,
       weight_in_load: Number(forgedItem.qePeso),
       weight_in_grams: Number(forgedItem.qePeso) * 1000,
-      magic_item: this._isMagicItem(forgedItem.bnBa, forgedItem.bnCa, forgedItem.bnDano),
+      magic_item: true,
       quantity: forgedItem.qtde,
     };
   }
 
   private _generateName(name: string, suffix: Map<string, string>) {
     return `${name} - ${Object.keys(suffix).join(', ')}`;
-  }
-  private _isMagicItem(ba: number = 0, ca: number = 0, damage: number = 0) {
-    return Boolean(ba > 0 || ca > 0 || damage > 0);
   }
 
   private _parseWeaponType(forgedWeapon: ForgedItem): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
