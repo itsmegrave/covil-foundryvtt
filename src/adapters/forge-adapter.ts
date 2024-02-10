@@ -1,11 +1,12 @@
 import { ForgedItem, WeaponIntelligence } from '../types/covil/forged-item';
-import { OldDragon2Weapon, OldDragon2Item, OldDragon2Shield } from '../types/olddragon2';
+import { OldDragon2Weapon, OldDragon2Item, OldDragon2Shield, OldDragon2Armor } from '../types/olddragon2';
 
 const itemTypes = {
   weapon: 'Arma',
   misc: 'Itens Gerais',
   shield: 'Escudo',
   potion: 'Poções',
+  armor: 'Armaduras',
 };
 export class ForgeAdapter {
   transformToOldDragon2Item(forgedItem: ForgedItem): OldDragon2Item {
@@ -17,18 +18,17 @@ export class ForgeAdapter {
         return this.transformToOldDragon2MiscItem(forgedItem);
       case itemTypes.shield:
         return this.transformToOldDragon2Shield(forgedItem);
+      case itemTypes.armor:
+        return this.transformToOldDragon2Armor(forgedItem);
       default:
-        console.debug(forgedItem.tipoItem);
-        throw new Error('Tipo de Item desconhecido!');
-        break;
+        console.error(forgedItem);
+        throw new Error(`Tipo de Item desconhecido: ${forgedItem.tipoItem}`);
     }
   }
 
   transformToOldDragon2Shield(forgedShield: ForgedItem): OldDragon2Shield {
     return {
-      name: this._generateName(forgedShield.qeNome, forgedShield.sufixo),
-      type: 'shield',
-      img: forgedShield.qeImg,
+      ...this._basicItemInfo(forgedShield, 'shield'),
       system: {
         ...this._generateSystemInformation(forgedShield),
         bonus_ca: forgedShield.bnCa || 0,
@@ -36,11 +36,21 @@ export class ForgeAdapter {
       },
     };
   }
-  transformToOldDragon2MiscItem(forgedItem: ForgedItem): OldDragon2Item {
-    console.log(forgedItem);
+
+  transformToOldDragon2Armor(forgedShield: ForgedItem): OldDragon2Armor {
     return {
-      name: this._generateName(forgedItem.qeNome, forgedItem.sufixo),
-      type: 'misc',
+      ...this._basicItemInfo(forgedShield, 'armor'),
+      system: {
+        ...this._generateSystemInformation(forgedShield),
+        bonus_ca: forgedShield.bnCa || 0,
+        type: 'armor',
+      },
+    };
+  }
+
+  transformToOldDragon2MiscItem(forgedItem: ForgedItem): OldDragon2Item {
+    return {
+      ...this._basicItemInfo(forgedItem, 'weapon'),
       system: {
         ...this._generateSystemInformation(forgedItem),
       },
@@ -49,9 +59,7 @@ export class ForgeAdapter {
 
   transformToOldDragon2Weapon(forgedWeapon: ForgedItem): OldDragon2Weapon {
     return {
-      name: this._generateName(forgedWeapon.qeNome, forgedWeapon.sufixo),
-      img: forgedWeapon.qeImg,
-      type: 'weapon',
+      ...this._basicItemInfo(forgedWeapon, 'weapon'),
       system: {
         ...this._generateSystemInformation(forgedWeapon),
         damage_type: forgedWeapon.fkDano,
@@ -69,6 +77,17 @@ export class ForgeAdapter {
         versatile: forgedWeapon.versatile,
         type: this._parseWeaponType(forgedWeapon),
       },
+    };
+  }
+
+  private _basicItemInfo(
+    forgedItem: ForgedItem,
+    type: 'shield' | 'weapon' | 'armor' | 'misc',
+  ): { name: string; img?: string; type: string } {
+    return {
+      name: this._generateName(forgedItem.qeNome, forgedItem.sufixo),
+      img: forgedItem.qeImg,
+      type,
     };
   }
 
