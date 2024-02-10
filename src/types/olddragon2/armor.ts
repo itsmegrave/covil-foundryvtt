@@ -1,8 +1,8 @@
 import { OldDragon2Item } from './item';
 
-export interface OldDragon2Shield extends OldDragon2Item {
+export interface OldDragon2Armor extends OldDragon2Item {
   system?: OldDragon2Item['system'] & {
     bonus_ca: number;
-    type: 'shield';
+    type: 'armor';
   };
 }
