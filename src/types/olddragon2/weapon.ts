@@ -1,6 +1,6 @@
-export interface OldDragon2Weapon extends Omit<OldDragon2Item, 'type'> {
+export interface OldDragon2Weapon extends OldDragon2Item {
   name: string;
-  type: 'weapon';
+  type: string;
   system?: OldDragon2Item['system'] & {
     bonus_ca?: number;
     damage_type?: string;

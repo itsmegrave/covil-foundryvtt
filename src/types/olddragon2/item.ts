@@ -1,4 +1,4 @@
-export type OldDragon2Item = {
+export interface OldDragon2Item {
   name: string;
   type: string;
   _id?: string;
@@ -15,4 +15,4 @@ export type OldDragon2Item = {
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   effects?: any[];
-};
+}
