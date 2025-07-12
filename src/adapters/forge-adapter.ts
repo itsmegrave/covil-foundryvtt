@@ -126,7 +126,9 @@ export class ForgeAdapter {
   private _parseDescription(properties: string, intelligent: WeaponIntelligence, suffix?: Map<string, string>) {
     const description = [properties, Object.keys(suffix ?? {}).join(', ')];
 
-    return `${description.join(', ')}\n\n${this._parseMap(suffix ?? new Map())}${this._parseIntelligentWeapon(intelligent)}`;
+    return `${description.join(', ')}\n\n${this._parseMap(suffix ?? new Map())}${this._parseIntelligentWeapon(
+      intelligent,
+    )}`;
   }
 
   private _isIntelligentWeapon(intelligent: WeaponIntelligence): boolean {
