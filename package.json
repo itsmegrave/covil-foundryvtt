@@ -30,7 +30,7 @@
     "postinstall": "husky install"
   },
   "devDependencies": {
-    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
+    "@league-of-foundry-developers/foundry-vtt-types": "^13.341.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.5",
     "@rollup/stream": "^3.0.1",
@@ -56,5 +56,8 @@
   "lint-staged": {
     "*.(ts|js|cjs|mjs)": "eslint --fix",
     "*.(json|yml|scss)": "prettier --write"
+  },
+  "dependencies": {
+    "@opendominion/rpg-awesome": "^0.0.20"
   }
 }
