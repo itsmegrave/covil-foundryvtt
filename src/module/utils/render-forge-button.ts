@@ -6,16 +6,20 @@ import { localize, isClientGM } from './game';
  * @param app - The Application instance (ItemDirectory)
  * @param html - The rendered HTML content
  */
-export const renderForgeButton = (app: Application, html: JQuery): void => {
+const renderForgeButton = (app: Application, html: HTMLElement): void => {
+  const htmlElement = html instanceof HTMLElement ? html : html[0];
   if (!isClientGM()) {
     return;
   }
+
+  if (html.querySelector('.forge-item-button')) return;
 
   const section = document.createElement('header');
   section.classList.add('character-generator');
   section.classList.add('directory-header');
 
-  const dirHeader = html[0]?.querySelector('.directory-header') as HTMLElement;
+  const dirHeader = htmlElement.querySelector('.directory-header');
+
   if (!dirHeader?.parentNode) {
     console.warn('Directory header not found, cannot add forge button');
     return;
@@ -27,7 +31,7 @@ export const renderForgeButton = (app: Application, html: JQuery): void => {
     `
     <div class="header-actions action-buttons flexrow">
       <button class="forge-item-button" type="button">
-        <i class="ra ra-anvil"></i>
+        <i class="fa-solid fa-hammer"></i>
         ${localize('covil-velho-dragao.forge')}
       </button>
     </div>
@@ -43,3 +47,5 @@ export const renderForgeButton = (app: Application, html: JQuery): void => {
     });
   }
 };
+
+export default renderForgeButton;
