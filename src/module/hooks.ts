@@ -1,4 +1,3 @@
-// @ts-expect-error - Forge type definitions are not available
 import renderForgeButton from './utils/render-forge-button';
 
 export const registerHooks = () => {
