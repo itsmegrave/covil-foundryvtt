@@ -50,7 +50,7 @@ export class ForgeAdapter {
 
   transformToOldDragon2MiscItem(forgedItem: ForgedItem): OldDragon2Item {
     return {
-      ...this._basicItemInfo(forgedItem, 'weapon'),
+      ...this._basicItemInfo(forgedItem, 'misc'),
       system: {
         ...this._generateSystemInformation(forgedItem),
       },
@@ -93,7 +93,7 @@ export class ForgeAdapter {
 
   private _generateSystemInformation(forgedItem: ForgedItem) {
     return {
-      description: this._parseDescription(forgedItem.propriedades, forgedItem.sufixo, forgedItem.inteligencia),
+      description: this._parseDescription(forgedItem.propriedades, forgedItem.inteligencia, forgedItem.sufixo),
       cost: forgedItem.custo,
       weight_in_load: Number(forgedItem.qePeso),
       weight_in_grams: Number(forgedItem.qePeso) * 1000,
@@ -102,8 +102,9 @@ export class ForgeAdapter {
     };
   }
 
-  private _generateName(name: string, suffix: Map<string, string>) {
-    return `${name} - ${Object.keys(suffix).join(', ')}`;
+  private _generateName(name: string, suffix?: Map<string, string>) {
+    console.log(`Generating name for item: ${name}`, suffix);
+    return `${name} - ${suffix ? Object.keys(suffix).join(', ') : ''}`;
   }
 
   private _parseWeaponType(forgedWeapon: ForgedItem): 'melee' | 'ranged' | 'ammunition' | 'throwing' {
@@ -122,10 +123,12 @@ export class ForgeAdapter {
     return 'melee';
   }
 
-  private _parseDescription(properties: string, suffix: Map<string, string>, intelligent: WeaponIntelligence) {
-    const description = [properties, Object.keys(suffix).join(', ')];
+  private _parseDescription(properties: string, intelligent: WeaponIntelligence, suffix?: Map<string, string>) {
+    const description = [properties, Object.keys(suffix ?? {}).join(', ')];
 
-    return `${description.join(', ')}\n\n${this._parseMap(suffix)}${this._parseIntelligentWeapon(intelligent)}`;
+    return `${description.join(', ')}\n\n${this._parseMap(suffix ?? new Map())}${this._parseIntelligentWeapon(
+      intelligent,
+    )}`;
   }
 
   private _isIntelligentWeapon(intelligent: WeaponIntelligence): boolean {

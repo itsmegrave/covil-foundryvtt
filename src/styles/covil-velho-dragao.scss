@@ -3,7 +3,5 @@
 /* This is your Sass entry file */
 /* ---------------------------- */
 
-@import 'typography';
-@import 'menu-icon';
-
-@import './rpg-awesome/rpg-awesome.scss';
+@use 'typography';
+@use 'menu-icon';

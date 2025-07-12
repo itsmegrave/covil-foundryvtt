@@ -16,7 +16,6 @@
 
 // Import TypeScript modules
 import { registerSettings } from './settings';
-import { preloadTemplates } from './preloadTemplates';
 import { Covil } from './config';
 
 import { registerHooks } from './hooks';
@@ -29,9 +28,6 @@ Hooks.once('init', async () => {
 
   // Register custom module settings
   registerSettings();
-
-  // Preload Handlebars templates
-  await preloadTemplates();
 
   // Register custom sheets (if any)
 
