@@ -3,7 +3,7 @@
 /* This is your Sass entry file */
 /* ---------------------------- */
 
-@import 'typography';
-@import 'menu-icon';
+@use 'typography';
+@use 'menu-icon';
 
-@import './rpg-awesome/rpg-awesome.scss';
+@use 'node_modules/@opendominion/rpg-awesome/scss/rpg-awesome';
