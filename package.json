@@ -48,7 +48,7 @@
     "prettier": "^3.1.1",
     "rollup": "^2.79.1",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.3",
+    "typescript": "^5.8.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "yargs": "^17.7.2"
