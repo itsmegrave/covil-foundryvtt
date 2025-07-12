@@ -56,8 +56,5 @@
   "lint-staged": {
     "*.(ts|js|cjs|mjs)": "eslint --fix",
     "*.(json|yml|scss)": "prettier --write"
-  },
-  "dependencies": {
-    "@opendominion/rpg-awesome": "^0.0.20"
   }
 }
